@@ -1,3 +1,7 @@
 domain: github.com/skang0601/datadog-k8s-operator
 repo: github.com/skang0601/datadog-k8s-operator
+resources:
+- group: datadog
+  kind: Monitor
+  version: v1
 version: "2"

@@ -1,0 +1,24 @@
+# permissions for end users to edit monitors.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: monitor-editor-role
+rules:
+- apiGroups:
+  - datadog.github.com/skang0601/datadog-k8s-operator
+  resources:
+  - monitors
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - datadog.github.com/skang0601/datadog-k8s-operator
+  resources:
+  - monitors/status
+  verbs:
+  - get
