@@ -8,7 +8,7 @@ The creation/deletion of the monitors are tracked completely by the CRDs.
 Specific monitors
 
 ```yaml
-apiVersion: datadog.github.com/skang0601/datadog-k8s-operator/datadog/v1alpha1
+apiVersion: datadog.github.com/skang0601/datadog-k8s-operator/v1alpha1
 kind: Monitor
 metadata:
   name: datadogmonitor-sample

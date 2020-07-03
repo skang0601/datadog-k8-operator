@@ -3,5 +3,5 @@ repo: github.com/skang0601/datadog-k8s-operator
 resources:
 - group: datadog
   kind: Monitor
-  version: v1
+  version: v1alpha1
 version: "2"

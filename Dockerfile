@@ -1,6 +1,10 @@
 # Build the manager binary
 FROM golang:1.13 as builder
 
+ENV DD_API_KEY ""
+ENV DD_APP_KEY ""
+ENV DATADOG_HOST "https://api.datadoghq.com"
+
 WORKDIR /workspace
 # Copy the Go Modules manifests
 COPY go.mod go.mod
