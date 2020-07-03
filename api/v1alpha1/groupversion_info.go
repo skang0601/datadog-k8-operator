@@ -15,10 +15,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-// Package v1 contains API Schema definitions for the datadog v1 API group
+// Package v1alpha1 contains API Schema definitions for the datadog v1alpha1 API group
 // +kubebuilder:object:generate=true
 // +groupName=datadog.github.com/skang0601/datadog-k8s-operator
-package v1
+package v1alpha1
 
 import (
 	"k8s.io/apimachinery/pkg/runtime/schema"

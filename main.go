@@ -1,17 +1,18 @@
 /*
 Copyright 2020 Sung Kang.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-    http://www.apache.org/licenses/LICENSE-2.0
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 package main
@@ -20,13 +21,14 @@ import (
 	"flag"
 	"os"
 
+	datadog "github.com/zorkian/go-datadog-api"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	datadogv1 "github.com/skang0601/datadog-k8s-operator/api/v1"
+	datadogv1 "github.com/skang0601/datadog-k8s-operator/api/v1alpha1"
 	"github.com/skang0601/datadog-k8s-operator/controllers"
 	// +kubebuilder:scaffold:imports
 )
@@ -44,15 +46,21 @@ func init() {
 }
 
 func main() {
-	var metricsAddr string
+	var metricsAddr, dd_api_key, dd_app_key string
 	var enableLeaderElection bool
 	flag.StringVar(&metricsAddr, "metrics-addr", ":8080", "The address the metric endpoint binds to.")
+	flag.StringVar(&dd_api_key, "DD_API_KEY", "foo", "DataDog API Key")
+	flag.StringVar(&dd_app_key, "DD_APP_KEY", "foo", "DataDog APP Key")
 	flag.BoolVar(&enableLeaderElection, "enable-leader-election", false,
 		"Enable leader election for controller manager. "+
 			"Enabling this will ensure there is only one active controller manager.")
 	flag.Parse()
 
 	ctrl.SetLogger(zap.New(zap.UseDevMode(true)))
+
+	dd_client := datadog.NewClient(dd_api_key, dd_app_key)
+
+	setupLog.Info("Initialized DataDog Client")
 
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
 		Scheme:             scheme,
@@ -67,9 +75,10 @@ func main() {
 	}
 
 	if err = (&controllers.MonitorReconciler{
-		Client: mgr.GetClient(),
-		Log:    ctrl.Log.WithName("controllers").WithName("Monitor"),
-		Scheme: mgr.GetScheme(),
+		Client:        mgr.GetClient(),
+		Log:           ctrl.Log.WithName("controllers").WithName("Monitor"),
+		Scheme:        mgr.GetScheme(),
+		DataDogClient: dd_client,
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Monitor")
 		os.Exit(1)

@@ -1,4 +1,4 @@
-apiVersion: datadog.github.com/skang0601/datadog-k8s-operator/v1
+apiVersion: datadog.github.com/skang0601/datadog-k8s-operator/v1alpha1
 kind: Monitor
 metadata:
   name: monitor-sample

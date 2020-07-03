@@ -31,7 +31,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	datadogv1 "github.com/skang0601/datadog-k8s-operator/api/v1"
+	datadogv1 "github.com/skang0601/datadog-k8s-operator/api/v1alpha1"
 	// +kubebuilder:scaffold:imports
 )
 
